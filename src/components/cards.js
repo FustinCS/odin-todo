@@ -17,6 +17,8 @@ function itemCardComponent(todoItem) {
     card.appendChild(dueDate);
     card.appendChild(priority);
 
+    card.classList.add('card');
+
     return card;
 }
 
