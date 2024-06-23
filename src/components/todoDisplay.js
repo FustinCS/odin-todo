@@ -24,12 +24,19 @@ function displayTodoItems(project) {
 function displayProjectItems(projects) {
     const element = document.createElement('div');
     element.classList.add('projects-container');
+    element.setAttribute('id', 'projects-container');
 
     for (let project of projects) {
         const projectButton = document.createElement('button');
         projectButton.textContent = project.title;
         projectButton.classList.add('sidebar-button');
-        element.append(projectButton);
+        projectButton.addEventListener('click', () => {
+            const contentBody = document.getElementById('content-body');
+            contentBody.replaceChildren();
+            contentBody.appendChild(displayTodoItems(project));
+        })
+
+        element.appendChild(projectButton);
     }
 
     return element;

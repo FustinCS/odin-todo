@@ -49,6 +49,10 @@
     background-color: #ffe7e7; 
 }
 
+.sidebar-button:focus {
+    background-color: #ffe7e7; 
+}
+
 .content-body {
     background-color: #ffffff;
     grid-column: 2 / 3;
@@ -59,4 +63,15 @@
 .card {
     border-color: black;
     border-style: outset;
+}
+
+dialog {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    max-width: fit-content;
+    border: 1px solid #ccc; /* Example border */
+    padding: 20px; /* Example padding */
+    background-color: #fff; /* Example background color */
 }

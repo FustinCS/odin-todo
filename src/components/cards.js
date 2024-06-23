@@ -10,7 +10,7 @@ function itemCardComponent(todoItem) {
     title.textContent = todoItem.title;
     description.textContent = todoItem.description;
     dueDate.textContent = todoItem.dueDate;
-    priority.textContent = todoItem.dueDate;
+    priority.textContent = todoItem.priority;
 
     card.appendChild(title);
     card.appendChild(description);
