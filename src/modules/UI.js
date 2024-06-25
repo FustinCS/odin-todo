@@ -28,6 +28,7 @@ class UI {
         document.body.appendChild(sidebar);
         document.body.appendChild(mainContent);
         this.renderProjectsList();
+        this.renderAddProjectsButton();
     }
 
     renderProjectsList() {
@@ -46,7 +47,49 @@ class UI {
     }
 
     renderAddProjectsButton() {
+        const sidebar = document.getElementById('sidebar');
+        // create button
+        const addButton = document.createElement('button');
+        addButton.textContent = 'Add Project';
+        
+        // create modal for button
+        const dialog = document.createElement('dialog');
+        dialog.setAttribute('id', 'projects-dialog');
+        dialog.classList.add('projects-dialog');
+        
+        const form = document.createElement('form');
+        form.setAttribute('id', 'projects-form');
 
+        const label = document.createElement('label');
+        label.setAttribute('for', 'projectTitle');
+        label.textContent = 'Title:';
+
+        const inputField = document.createElement('input');
+        inputField.setAttribute('type', 'text');
+        inputField.setAttribute('id', 'projectTitle');
+        inputField.setAttribute('name', 'projectTitle');
+
+        const submit = document.createElement('button');
+        submit.setAttribute('type', 'submit');
+        submit.setAttribute('value', 'submit');
+        submit.textContent = 'Submit';
+
+        form.appendChild(label);
+        form.appendChild(inputField);
+        form.appendChild(submit);
+
+        dialog.appendChild(form);
+
+        sidebar.appendChild(dialog);
+        
+
+        // add event listener to button
+        addButton.addEventListener('click', () => {
+            dialog.showModal();
+        })
+
+        // add to sidebar after project listing
+        sidebar.appendChild(addButton);
     }
 
     #renderCurrentSelectedProject(event) {
