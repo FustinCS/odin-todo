@@ -74,6 +74,18 @@ class UI {
         submit.setAttribute('value', 'submit');
         submit.textContent = 'Submit';
 
+        submit.addEventListener('click', (event) => {
+            event.preventDefault();
+            dialog.close();
+            const title = inputField.value;
+            const newProject = new Project(title);
+            this.projects.push(newProject);
+            
+            inputField.value = '';
+            this.renderProjectsList();
+            
+        });
+
         form.appendChild(label);
         form.appendChild(inputField);
         form.appendChild(submit);
@@ -86,7 +98,7 @@ class UI {
         // add event listener to button
         addButton.addEventListener('click', () => {
             dialog.showModal();
-        })
+        });
 
         // add to sidebar after project listing
         sidebar.appendChild(addButton);
