@@ -115,8 +115,13 @@ class UI {
         // clear previous content
         const mainContent = document.getElementById('main-content');
         mainContent.replaceChildren();
+        
+        //Add Project Button
 
-        for (let task of selectedProject.tasks) {
+        // render all tasks
+        for (let i = 0; i < selectedProject.tasks.length; i++) {
+            const task = selectedProject.tasks[i];
+
             const taskContainer = document.createElement('div');
             const title = document.createElement('h1');
             const description = document.createElement('p');
@@ -128,10 +133,20 @@ class UI {
             dueDate.textContent = task.dueDate;
             priority.textContent = task.priority;
 
+            // remove current task button
+            const removeBtn = document.createElement('button');
+            removeBtn.textContent = 'Remove';
+            removeBtn.addEventListener('click', (event) => {
+                const taskContainer = event.target.parentElement
+                selectedProject.removeTask(i);
+                mainContent.removeChild(taskContainer);
+            })
+
             taskContainer.appendChild(title);
             taskContainer.appendChild(description);
             taskContainer.appendChild(dueDate);
             taskContainer.appendChild(priority);
+            taskContainer.appendChild(removeBtn);
 
             // Add new content
             mainContent.appendChild(taskContainer);
@@ -139,7 +154,6 @@ class UI {
 
     }
 
-    // event listeners
 }
 
 export { UI };
