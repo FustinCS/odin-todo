@@ -4,7 +4,7 @@ import { Task } from "./Task";
 class UI {
     constructor() {
         this.projects = [new Project('Default')];
-        this.projects[0].addTask(new Task('Valorant', 'desc', '07/30', 'High'));
+        this.projects[0].addTask(new Task('Valorant', '07/30'));
     }
     
     // build homepage
@@ -78,11 +78,16 @@ class UI {
             event.preventDefault();
             dialog.close();
             const title = inputField.value;
-            const newProject = new Project(title);
-            this.projects.push(newProject);
-            
-            inputField.value = '';
-            this.renderProjectsList();
+            if (title) {
+                const newProject = new Project(title);
+                this.projects.push(newProject);
+                
+                inputField.value = '';
+                this.renderProjectsList();
+            }
+            else {
+                alert("No Project Title Given!");
+            }
             
         });
 
@@ -104,21 +109,112 @@ class UI {
         sidebar.appendChild(addButton);
     }
 
+    #renderAddTaskButton(selectedProject) {
+        // create button
+        const buttonContainer = document.createElement('div');
+        const addBtn = document.createElement('button');
+        addBtn.textContent = 'Add Task';
+
+        // create modal
+        const dialog = document.createElement('dialog');
+        dialog.setAttribute('id', 'tasks-dialog');
+        dialog.classList.add('tasks-dialog');
+        
+        const form = document.createElement('form');
+        form.setAttribute('id', 'tasks-form');
+
+        const titleLabel = document.createElement('label');
+        titleLabel.setAttribute('for', 'taskTitle');
+        titleLabel.textContent = 'Title:';
+
+        const titleInput = document.createElement('input');
+        titleInput.setAttribute('type', 'text');
+        titleInput.setAttribute('id', 'taskTitle');
+        titleInput.setAttribute('name', 'taskTitle');
+
+        const dateLabel = document.createElement('label');
+        dateLabel.setAttribute('for', 'taskDate');
+        dateLabel.textContent = 'Title:';
+
+        const dateInput = document.createElement('input');
+        dateInput.setAttribute('type', 'date');
+        dateInput.setAttribute('id', 'taskDate');
+        dateInput.setAttribute('name', 'taskDate');
+
+        const submit = document.createElement('button');
+        submit.setAttribute('type', 'submit');
+        submit.setAttribute('value', 'submit');
+        submit.textContent = 'Submit';
+
+        form.appendChild(titleLabel);
+        form.appendChild(titleInput);
+        form.appendChild(dateLabel);
+        form.appendChild(dateInput);
+        form.appendChild(submit);
+
+        dialog.appendChild(form);
+
+        submit.addEventListener('click', (event) => {
+            event.preventDefault();
+            dialog.close();
+            const title = titleInput.value;
+            const date = dateInput.value;
+
+            if (title && date) {
+                const mainContent = document.getElementById('main-content');
+                const newTask = new Task(title, date);
+                selectedProject.addTask(newTask);
+                
+                titleInput.value = '';
+                dateInput.value = '';
+                
+                // remove all tasks
+                const allTasks = document.getElementById('all-task-container');
+                allTasks.replaceChildren();
+                // readd tasks
+                mainContent.appendChild(this.#renderTasks(selectedProject));
+                
+            }
+            else {
+                alert("No Task Title Given!");
+            }
+            
+        });
+
+        addBtn.addEventListener('click', () => {
+            dialog.showModal();
+        });
+        
+        buttonContainer.appendChild(addBtn);
+        buttonContainer.appendChild(dialog);
+
+        return buttonContainer;
+    }
+
     #renderCurrentSelectedProject(event) {
-        // get index of project
+        // Get index of project
         const clickedButton = event.target;
         const projectButtons = Array.from(document.querySelectorAll('.project-button'));
         const selectedIndex = projectButtons.indexOf(clickedButton);
 
         const selectedProject = this.projects[selectedIndex];    
 
-        // clear previous content
+        // Clear previous content
         const mainContent = document.getElementById('main-content');
         mainContent.replaceChildren();
         
-        //Add Project Button
+        // Add Project Button
+        mainContent.appendChild(this.#renderAddTaskButton(selectedProject));
 
         // render all tasks
+        mainContent.appendChild(this.#renderTasks(selectedProject));
+
+    }
+
+    #renderTasks(selectedProject) {
+        const allTasks = document.createElement('div');
+        allTasks.setAttribute('id', 'all-task-container');
+
         for (let i = 0; i < selectedProject.tasks.length; i++) {
             const task = selectedProject.tasks[i];
 
@@ -133,13 +229,13 @@ class UI {
             dueDate.textContent = task.dueDate;
             priority.textContent = task.priority;
 
-            // remove current task button
+            // Remove current task button
             const removeBtn = document.createElement('button');
             removeBtn.textContent = 'Remove';
             removeBtn.addEventListener('click', (event) => {
                 const taskContainer = event.target.parentElement
                 selectedProject.removeTask(i);
-                mainContent.removeChild(taskContainer);
+                allTasks.removeChild(taskContainer);
             })
 
             taskContainer.appendChild(title);
@@ -149,11 +245,11 @@ class UI {
             taskContainer.appendChild(removeBtn);
 
             // Add new content
-            mainContent.appendChild(taskContainer);
+            allTasks.appendChild(taskContainer);
         }
 
+        return allTasks;
     }
-
 }
 
 export { UI };
