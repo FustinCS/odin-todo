@@ -3,8 +3,12 @@ import { Task } from "./Task";
 
 class UI {
     constructor() {
-        this.projects = [new Project('Default')];
-        this.projects[0].addTask(new Task('Valorant', '07/30'));
+        this.projects = JSON.parse(localStorage.getItem('projects'));
+        if (!this.projects) {
+            this.projects = [new Project('Default')];
+            this.projects[0].addTask(new Task('Valorant', '07/30'));
+        }
+        
     }
     
     // build homepage
@@ -81,6 +85,7 @@ class UI {
             if (title) {
                 const newProject = new Project(title);
                 this.projects.push(newProject);
+                localStorage.setItem('projects', JSON.stringify(this.projects));
                 
                 inputField.value = '';
                 this.renderProjectsList();
@@ -164,6 +169,7 @@ class UI {
                 const mainContent = document.getElementById('main-content');
                 const newTask = new Task(title, date);
                 selectedProject.addTask(newTask);
+                localStorage.setItem('projects', JSON.stringify(this.projects));
                 
                 titleInput.value = '';
                 dateInput.value = '';
@@ -235,6 +241,7 @@ class UI {
             removeBtn.addEventListener('click', (event) => {
                 const taskContainer = event.target.parentElement
                 selectedProject.removeTask(i);
+                localStorage.setItem('projects', JSON.stringify(this.projects));
                 allTasks.removeChild(taskContainer);
             })
 
