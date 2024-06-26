@@ -3,8 +3,17 @@ import { Task } from "./Task";
 
 class UI {
     constructor() {
-        this.projects = JSON.parse(localStorage.getItem('projects'));
-        if (!this.projects) {
+        let localStorageProjects = JSON.parse(localStorage.getItem('projects'));
+        
+        if (localStorageProjects) {
+            this.projects = localStorageProjects.map(projectData => {
+                let project = new Project(projectData.name);
+                project.tasks = projectData.tasks.map(taskData => new Task(taskData.title, taskData.dueDate));
+                return project;
+
+            });
+        }
+        else {
             this.projects = [new Project('Default')];
             this.projects[0].addTask(new Task('Valorant', '07/30'));
         }
